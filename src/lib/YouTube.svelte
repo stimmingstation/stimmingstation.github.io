@@ -1,5 +1,7 @@
 <script>
     export let videoUrl;
+    export let initX;
+    export let initY;
     import Workspace from "./Window.svelte";
 
     function youtubeUrlParser(url) {
@@ -24,7 +26,7 @@
 {#await videoTitlePromise}
   <!--Do nothing-->
 {:then videoTitle}
-  <Workspace title="Youtube - {videoTitle}">
+  <Workspace title="Youtube - {videoTitle}" posX={initX} posY={initY}>
     <div class="youtube">
       <iframe
           title="{videoTitle}"
