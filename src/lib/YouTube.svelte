@@ -26,7 +26,7 @@
 {#await videoTitlePromise}
   <!--Do nothing-->
 {:then videoTitle}
-  <Workspace title="Youtube - {videoTitle}" posX={initX} posY={initY}>
+  <Workspace title="YouTube - {videoTitle}" posX={initX} posY={initY}>
     <div class="youtube">
       <iframe
           title="{videoTitle}"
