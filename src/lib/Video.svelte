@@ -1,6 +1,6 @@
 <script>
   export let videoId = "";
-  export let name="";
+  export let name = "";
 </script>
 
 <div class="video">
@@ -20,7 +20,6 @@
     position: relative;
     overflow: hidden;
     width: var(--width, 540px);
-    /* width: 540px; */
     height: 720px;
   }
   .video iframe {
@@ -28,7 +27,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* transform: translate(-50%, -50%) scale(2.2); */
     z-index: -1;
   }
 </style>
