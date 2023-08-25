@@ -4,9 +4,6 @@
     export let posX = 0;
     export let posY = 0;
 
-    let prevPosX = 0;
-    let prevPosY = 0;
-
     let active = false;
 
     let windowNode;
@@ -28,8 +25,6 @@
         if (active) {
             posX += e.movementX;
             posY += e.movementY;
-
-            console.log(`posX: ${posX}, posY: ${posY}`)
         }
     };
 </script>
