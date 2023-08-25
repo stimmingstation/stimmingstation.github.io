@@ -114,9 +114,9 @@
   }
 </style>
 
-{#if access.TaskMenu}
+<!-- {#if access.TaskMenu}
   <TaskMenu {toggleAccess} />
-{/if}
+{/if} -->
 
 <header id="navigationbar">
   <nav>
