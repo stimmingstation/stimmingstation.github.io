@@ -114,19 +114,20 @@
   }
 </style>
 
-{#if access.TaskMenu}
+<!-- {#if access.TaskMenu}
   <TaskMenu {toggleAccess} />
-{/if}
+{/if} -->
+>>>>>>> main
 
 <header id="navigationbar">
   <nav>
     <div class="menu">
       <div class="menu__left">
         <button
-          id="start-panel"
-          class="btn--start menu__button"
-          on:click={() => (access.TaskMenu = !access.TaskMenu)}>
-          <img {src} alt="logo_start" />
+            id="start-panel"
+            class="btn--start menu__button"
+            on:click={() => (access.TaskMenu = !access.TaskMenu)}>
+          <img {src} alt="logo_start"/>
           Start
         </button>
       </div>

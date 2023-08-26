@@ -1,8 +1,26 @@
 <script>
     export let videoUrl;
-    export let initX;
-    export let initY;
-    import Workspace from "./Window.svelte";
+    export let PosX;
+    export let PosY;
+
+    // default 16:9
+    export let Width = 640;
+    export let Height = 360;
+
+    import Window from "./Window.svelte";
+
+    // Doesn't work :(
+    // $: {
+    //     const iframe = document.getElementById('youtube-iframe');
+    //     if (iframe) {
+    //         const iframeDocument = iframe.ownerDocument || iframe.ownerDocument.document;
+    //         const videoElement = iframeDocument.querySelector('.html5-main-video');
+    //         if (videoElement) {
+    //             videoElement.style.height = '100%'; // Example CSS manipulation
+    //             // You can perform more CSS modifications here
+    //         }
+    //     }
+    // }
 
     function youtubeUrlParser(url) {
         if (url !== undefined) {
@@ -20,41 +38,41 @@
 
     let videoId = youtubeUrlParser(videoUrl);
     let videoTitlePromise = resolveTitle(videoId);
-
 </script>
 
 {#await videoTitlePromise}
   <!--Do nothing-->
 {:then videoTitle}
-  <Workspace title="YouTube - {videoTitle}" posX={initX} posY={initY}>
+
+  <Window title="YouTube - {videoTitle}" PosX={PosX} PosY={PosY} Width={Width} Height={Height}>
     <div class="youtube">
       <iframe
-          title="{videoTitle}"
-          width="1280"
-          height="720"
+          scrolling="no"
+          title={videoTitle}
           src="https://www.youtube.com/embed/{videoId}?autoplay=1&rel=0&mute=1&loop=1&controls=0&showinfo=0&modestbranding=1&vq=hd1080"
-          frameborder="0"
           allow="autoplay"
-          allowfullscreen/>
+          frameborder="0"
+      />
     </div>
-  </Workspace>
+  </Window>
+
 {:catch error}
   <p>Something went wrong: {error.message}</p>
 {/await}
 
 <style>
     .youtube {
-        position: relative;
-        overflow: hidden;
-        width: var(--width, 540px);
-        height: 720px;
+        pointer-events: none;
     }
 
     .youtube iframe {
         position: absolute;
+        width: 100%;
+        height: 100%; /* Make the iframe take the full height of the container */
+
+        /* Center the content both vertically and horizontally */
+        transform: translate(-50%, -50%);
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: -1;
     }
 </style>
