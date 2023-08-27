@@ -1,100 +1,104 @@
 <script>
-    export let title;
+  export let ID = 'window'
+  export let title
 
-    import {draggable} from "svelte-agnostic-draggable";
-    import {onMount} from "svelte";
-    import {zIndex} from "./store.js";
+  import { draggable } from 'svelte-agnostic-draggable'
+  import { onMount } from 'svelte'
+  import { zIndex } from './store.js'
 
-    export let PosX = 0;
-    export let PosY = 0;
+  export let PosX = 0
+  export let PosY = 0
 
-    export let Width = 500;
-    export let Height = 500;
+  export let Width = 500
+  export let Height = 500
 
-    export let Draggable = true;
-    export let Resizable = true;
+  export let Draggable = true
+  export let Resizable = true
+  export let TopMost = false
 
 
-    let Resizing = false;
-    let InitialWidth = Width;
-    let InitialHeight = Height;
+  let Resizing = false
+  let InitialWidth = Width
+  let InitialHeight = Height
 
-    let Window;
-    let zIndexValue;
+  let Window
+  let zIndexValue
 
-    // subscribe to the zIndex store
-    zIndex.subscribe((value) => {
-        zIndexValue = value;
-    });
+  // subscribe to the zIndex store
+  zIndex.subscribe((value) => {
+    zIndexValue = value
+  })
 
-    onMount(() => {
-        // set the initial position of the window
-        Window.style.left = PosX + 'px';
-        Window.style.top = PosY + 'px';
+  onMount(() => {
+    if (!TopMost) {
+      // set the initial position of the window
+      Window.style.left = PosX + 'px'
+      Window.style.top = PosY + 'px'
 
-        // add listener to bring window to front
-        Window.addEventListener('mousedown', () => {
-            // increment the zIndex store
-            zIndex.update(n => n + 1);
-            Window.style.zIndex = zIndexValue;
-        });
+      // add listener to bring window to front
+      Window.addEventListener('mousedown', () => {
+        // increment the zIndex store
+        zIndex.update(n => n + 1)
+        Window.style.zIndex = zIndexValue
+      })
 
-        // add listener to bring window to front
-        Window.addEventListener('touchstart', () => {
-            // increment the zIndex store
-            zIndex.update(n => n + 1);
-            Window.style.zIndex = zIndexValue;
-        });
-    });
-
-    // map all touch events to mouse events
-    import mapTouchToMouseFor from "svelte-touch-to-mouse";
-
-    mapTouchToMouseFor('.draggable');
-
-    // Svelte Event Handling
-    function onDragMove(Event) {
-        if (Resizable) {
-            if (Resizing) {
-                Width = InitialWidth + Event.detail.position.left - PosX;
-                Height = InitialHeight + Event.detail.position.top - PosY;
-            } else {
-                PosX = Event.detail.position.left;
-                InitialWidth = Width;
-                PosY = Event.detail.position.top;
-                InitialHeight = Height;
-                Resizing = true;
-            }
-        }
+      // add listener to bring window to front
+      Window.addEventListener('touchstart', () => {
+        // increment the zIndex store
+        zIndex.update(n => n + 1)
+        Window.style.zIndex = zIndexValue
+      })
     }
+  })
 
-    function onDragStop() {
-        Resizing = false;
+  // map all touch events to mouse events
+  import mapTouchToMouseFor from 'svelte-touch-to-mouse'
+
+  mapTouchToMouseFor('.draggable')
+
+  // Svelte Event Handling
+  function onDragMove(Event) {
+    if (Resizable) {
+      if (Resizing) {
+        Width = InitialWidth + Event.detail.position.left - PosX
+        Height = InitialHeight + Event.detail.position.top - PosY
+      } else {
+        PosX = Event.detail.position.left
+        InitialWidth = Width
+        PosY = Event.detail.position.top
+        InitialHeight = Height
+        Resizing = true
+      }
     }
+  }
+
+  function onDragStop() {
+    Resizing = false
+  }
 </script>
 
 {#if Draggable}
 
-  <div class="window"
+  <div id={ID} class='window'
        use:draggable={{handle:'.window--header', cursor:'grabbing'}}
-       style="width:{Width}px; height:{Height}px;"
+       style='width:{Width}px; height:{Height}px;'
        bind:this={Window}
   >
-    <div class="draggable window--header">
-      <p class="window--title">{title}</p>
-      <div class="window--button-group">
-        <button class="window--button">?</button>
-        <button class="window--button">_</button>
-        <button class="window--button">X</button>
+    <div class='draggable window--header'>
+      <p class='window--title'>{title}</p>
+      <div class='window--button-group'>
+        <button class='window--button'>?</button>
+        <button class='window--button'>_</button>
+        <button class='window--button' on:click={() => Window.parentNode.removeChild(Window)}>X</button>
       </div>
     </div>
-    <div class="window--content">
-      <slot/>
+    <div class='window--content'>
+      <slot />
     </div>
 
     {#if Resizable}
 
-      <div class="draggable window--resize"
+      <div class='draggable window--resize'
            use:draggable={{helper:'clone', revert:true}}
            on:drag:move={onDragMove} on:drag:stop={onDragStop}
       ></div>
@@ -105,20 +109,20 @@
 
 {:else}
 
-  <div class="window" style="width:{Width}px; height:{Height}px;" bind:this={Window}>
-    <div class="window--header">
-      <p class="window--title">{title}</p>
-      <div class="window--button-group">
-        <button class="window--button">?</button>
-        <button class="window--button">_</button>
-        <button class="window--button">X</button>
+  <div id={ID} class='window' style='width:{Width}px; height:{Height}px;' bind:this={Window}>
+    <div class='window--header'>
+      <p class='window--title'>{title}</p>
+      <div class='window--button-group'>
+        <button class='window--button'>?</button>
+        <button class='window--button'>_</button>
+        <button class='window--button' on:click={() => Window.parentNode.removeChild(Window)}>X</button>
       </div>
     </div>
-    <div class="window--content">
-      <slot/>
+    <div class='window--content'>
+      <slot />
     </div>
     {#if Resizable}
-      <div class="draggable window--resize"
+      <div class='draggable window--resize'
            use:draggable={{helper:'clone', revert:true}}
            on:drag:move={onDragMove} on:drag:stop={onDragStop}
       ></div>
@@ -196,6 +200,11 @@
         align-items: center;
     }
 
+    button {
+        outline: none;
+        cursor: pointer;
+    }
+
     .window--button {
         color: #000;
         border-top: 1px solid #fff;
@@ -208,5 +217,13 @@
         width: 14px;
         height: 14px;
         line-height: 14px !important;
+    }
+
+    .window--button:active {
+        border-top: 1px solid #000;
+        border-left: 1px solid #000;
+        border-right: 1px solid #dfdfdf;
+        border-bottom: 1px solid #dfdfdf;
+        box-shadow: inset 1px 1px grey, 1px 0 #fff, 0 1px #fff, 1px 1px #fff;
     }
 </style>

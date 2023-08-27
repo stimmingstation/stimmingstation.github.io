@@ -4,41 +4,41 @@
     export let PosX = 0;
     export let PosY = 0;
 
-    // default 16:9
-    export let Width = 640;
-    export let Height = 360;
+  // default 16:9
+  export let Width = 640
+  export let Height = 360
 
-    import Window from "./Window.svelte";
+  import Window from './Window.svelte'
 
-    // Doesn't work :(
-    // $: {
-    //     const iframe = document.getElementById('youtube-iframe');
-    //     if (iframe) {
-    //         const iframeDocument = iframe.ownerDocument || iframe.ownerDocument.document;
-    //         const videoElement = iframeDocument.querySelector('.html5-main-video');
-    //         if (videoElement) {
-    //             videoElement.style.height = '100%'; // Example CSS manipulation
-    //             // You can perform more CSS modifications here
-    //         }
-    //     }
-    // }
+  // Doesn't work :(
+  // $: {
+  //     const iframe = document.getElementById('youtube-iframe');
+  //     if (iframe) {
+  //         const iframeDocument = iframe.ownerDocument || iframe.ownerDocument.document;
+  //         const videoElement = iframeDocument.querySelector('.html5-main-video');
+  //         if (videoElement) {
+  //             videoElement.style.height = '100%'; // Example CSS manipulation
+  //             // You can perform more CSS modifications here
+  //         }
+  //     }
+  // }
 
-    function youtubeUrlParser(url) {
-        if (url !== undefined) {
-            let rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
-            let r = url.match(rx);
-            return r[1];
-        }
+  function youtubeUrlParser(url) {
+    if (url !== undefined) {
+      let rx = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/
+      let r = url.match(rx)
+      return r[1]
     }
+  }
 
-    async function resolveTitle(videoId) {
-        let response = fetch(`https://noembed.com/embed?dataType=json&url=https://www.youtube.com/watch?v=${videoId}`);
-        let json = await (await response).json();
-        return json.title;
-    }
+  async function resolveTitle(videoId) {
+    let response = fetch(`https://noembed.com/embed?dataType=json&url=https://www.youtube.com/watch?v=${videoId}`)
+    let json = await (await response).json()
+    return json.title
+  }
 
-    let videoId = youtubeUrlParser(videoUrl);
-    let videoTitlePromise = resolveTitle(videoId);
+  let videoId = youtubeUrlParser(videoUrl)
+  let videoTitlePromise = resolveTitle(videoId)
 </script>
 
 {#await videoTitlePromise}

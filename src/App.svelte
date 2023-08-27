@@ -1,6 +1,8 @@
 <script>
-    import Footer from "./Footer.svelte";
+    import TaskBar from "./lib/TaskBar.svelte";
     import YouTube from "./lib/YouTube.svelte";
+    import Custom from "./lib/Custom.svelte";
+    import AddYoutube from './lib/AddYoutube.svelte'
 </script>
 
 <style>
@@ -26,5 +28,7 @@
   <!-- Bottom right -->
   <YouTube videoUrl="https://www.youtube.com/watch?v=A7IMBnMU5a4" PosX={1351} PosY={400} Width={500} Height={380}/>
 
-  <Footer/>
+  <AddYoutube/>
+
+  <TaskBar/>
 </main>
