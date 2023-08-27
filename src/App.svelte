@@ -1,8 +1,8 @@
 <script>
     import TaskBar from "./lib/TaskBar.svelte";
-    import YouTube from "./lib/YouTube.svelte";
-    import Custom from "./lib/Custom.svelte";
-    import AddYoutube from './lib/AddYoutube.svelte'
+    import YouTube from "./lib/applications/YouTube.svelte";
+    import Custom from "./lib/applications/Custom.svelte";
+    import AddYoutube from './lib/startmenu/AddYoutube.svelte'
 </script>
 
 <style>
@@ -27,8 +27,6 @@
   <YouTube videoUrl="https://www.youtube.com/watch?v=gHIS-Xb2DbY" PosX={13} PosY={500} Width={628} Height={354}/>
   <!-- Bottom right -->
   <YouTube videoUrl="https://www.youtube.com/watch?v=A7IMBnMU5a4" PosX={1351} PosY={400} Width={500} Height={380}/>
-
-  <AddYoutube/>
 
   <TaskBar/>
 </main>

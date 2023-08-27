@@ -8,7 +8,7 @@
   export let Width = 640
   export let Height = 360
 
-  import Window from './Window.svelte'
+  import Window from '../Window.svelte'
 
   // Doesn't work :(
   // $: {

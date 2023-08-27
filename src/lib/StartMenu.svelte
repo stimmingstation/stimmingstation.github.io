@@ -1,5 +1,5 @@
 <script>
-  import routes_start_menu from './routes.js'
+  import routes_start_menu from './startmenu/routes.js'
 
   export let toggleAccess
 

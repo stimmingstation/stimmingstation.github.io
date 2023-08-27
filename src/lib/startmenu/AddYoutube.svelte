@@ -5,7 +5,7 @@
   let Width = 300
   let Height = 55
 
-  import Window from './Window.svelte'
+  import Window from '../Window.svelte'
 
   // force window to be on top and centered
   onMount(() => {
