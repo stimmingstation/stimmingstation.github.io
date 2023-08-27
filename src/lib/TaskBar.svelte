@@ -1,41 +1,65 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte'
-  import StartMenu from "./StartMenu.svelte";
+  import StartMenu from './StartMenu.svelte'
 
-  let src = "logo_start.png";
+  let src = 'logo_start.png'
 
-  let time = new Date();
+  let time = new Date()
   let access = {
     TaskMenu: false,
     Youtube: true,
-    Calculator: false
-  };
+    Calculator: false,
+  }
 
-  const watchClock = time => (time < 10 ? `0${time}` : time);
+  const watchClock = time => (time < 10 ? `0${time}` : time)
   const toggleAccess = name => {
-    access[name] = true;
-  };
+    access[name] = true
+  }
 
-  $: hours = watchClock(time.getHours());
-  $: minutes = watchClock(time.getMinutes());
-  $: seconds = watchClock(time.getSeconds());
+  $: hours = watchClock(time.getHours())
+  $: minutes = watchClock(time.getMinutes())
+  $: seconds = watchClock(time.getSeconds())
 
   onMount(() => {
     const interval = setInterval(() => {
-      time = new Date();
-    }, 1000);
+      time = new Date()
+    }, 1000)
 
     return () => {
-      clearInterval(interval);
-    };
-  });
+      clearInterval(interval)
+    }
+  })
 
-    let dispatch = createEventDispatcher()
+  let dispatch = createEventDispatcher()
 
   function clickStart() {
-    dispatch('clickStart');
+    dispatch('clickStart')
   }
 </script>
+
+{#if access.TaskMenu}
+  <StartMenu {toggleAccess} />
+{/if}
+
+<header id="taskbar">
+  <nav>
+    <div class="menu">
+      <div class="menu--left">
+        <button
+          id="start-panel"
+          class="btn--start menu--button"
+          on:click={() => (access.TaskMenu = !access.TaskMenu)}
+        >
+          <img {src} alt="logo_start" />
+          Start
+        </button>
+      </div>
+      <div>
+        <div id="datetime" class="deep-box">{hours}:{minutes}:{seconds}</div>
+      </div>
+    </div>
+  </nav>
+</header>
 
 <style>
   header {
@@ -49,7 +73,11 @@
     padding: 3px;
     border-right: 1px solid gray;
     border-bottom: 1px solid gray;
-    box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
+    box-shadow:
+      inset 1px 1px #dfdfdf,
+      1px 0 #000,
+      0 1px #000,
+      1px 1px #000;
   }
 
   .menu {
@@ -82,7 +110,11 @@
     border-left: 1px solid #fff;
     border-right: 1px solid gray;
     border-bottom: 1px solid gray;
-    box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
+    box-shadow:
+      inset 1px 1px #dfdfdf,
+      1px 0 #000,
+      0 1px #000,
+      1px 1px #000;
     background-color: silver;
   }
 
@@ -103,13 +135,20 @@
     border-left: 1px solid #000;
     border-right: 1px solid #dfdfdf;
     border-bottom: 1px solid #dfdfdf;
-    box-shadow: inset 1px 1px grey, 1px 0 #fff, 0 1px #fff, 1px 1px #fff;
+    box-shadow:
+      inset 1px 1px grey,
+      1px 0 #fff,
+      0 1px #fff,
+      1px 1px #fff;
   }
 
   .deep-box {
     border-top: 1px solid gray;
     border-left: 1px solid gray;
-    box-shadow: 1px 0 #fff, 0 1px #fff, 1px 1px #fff;
+    box-shadow:
+      1px 0 #fff,
+      0 1px #fff,
+      1px 1px #fff;
     background-color: #b8b8b8;
     padding: 1px 2px;
     font-size: 14px;
@@ -119,26 +158,3 @@
     font-size: 10px;
   }
 </style>
-
-{#if access.TaskMenu}
-  <StartMenu {toggleAccess} />
-{/if}
-
-<header id="taskbar">
-  <nav>
-    <div class="menu">
-      <div class="menu--left">
-        <button
-          id="start-panel"
-          class="btn--start menu--button"
-          on:click={() => (access.TaskMenu = !access.TaskMenu)}>
-          <img {src} alt="logo_start" />
-          Start
-        </button>
-      </div>
-      <div>
-        <div id="datetime" class="deep-box">{hours}:{minutes}:{seconds}</div>
-      </div>
-    </div>
-  </nav>
-</header>

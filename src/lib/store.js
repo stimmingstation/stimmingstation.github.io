@@ -1,45 +1,79 @@
 import { writable } from 'svelte/store'
 
 export const zIndex = writable(1)
-export const windows = writable([
+
+/**
+ * State for the Window.svelte component
+ * @typedef {{
+ *   x: number,
+ *   y: number,
+ *   w: number,
+ *   h: number,
+ * }} WindowState
+ */
+
+/**
+ * Object representing all Windows
+ * @typedef {{
+ *   url: string,
+ *   state: WindowState,
+ *   params: any,
+ * }} Window
+ * @todo the params field isn't used right now
+ */
+
+/** @type {Window[]} */
+const initialWindows = [
   {
-    type: 'YouTube',
-    videoUrl: 'https://www.youtube.com/watch?v=ChBg4aowzX8',
-    PosX: 17,
-    PosY: 21,
-    Width: 630,
-    Height: 354,
+    url: 'https://www.youtube.com/watch?v=ChBg4aowzX8',
+    state: {
+      x: 17,
+      y: 21,
+      w: 630,
+      h: 354,
+    },
+    params: {},
   },
   {
-    type: 'YouTube',
-    videoUrl: 'https://www.youtube.com/watch?v=Q4MOP8s9KyY',
-    PosX: 1187,
-    PosY: 25,
-    Width: 630,
-    Height: 354,
+    url: 'https://www.youtube.com/watch?v=Q4MOP8s9KyY',
+    state: {
+      x: 1187,
+      y: 25,
+      w: 630,
+      h: 354,
+    },
+    params: {},
   },
   {
-    type: 'YouTube',
-    videoUrl: 'https://www.youtube.com/watch?v=REuKymvrrqk',
-    PosX: 473,
-    PosY: 242,
-    Width: 862,
-    Height: 483,
+    url: 'https://www.youtube.com/watch?v=REuKymvrrqk',
+    state: {
+      x: 473,
+      y: 242,
+      w: 862,
+      h: 483,
+    },
+    params: {},
   },
   {
-    type: 'YouTube',
-    videoUrl: 'https://www.youtube.com/watch?v=gHIS-Xb2DbY',
-    PosX: 13,
-    PosY: 500,
-    Width: 628,
-    Height: 354,
+    url: 'https://www.youtube.com/watch?v=gHIS-Xb2DbY',
+    state: {
+      x: 13,
+      y: 500,
+      w: 628,
+      h: 354,
+    },
+    params: {},
   },
   {
-    type: 'YouTube',
-    videoUrl: 'https://www.youtube.com/watch?v=A7IMBnMU5a4',
-    PosX: 1351,
-    PosY: 400,
-    Width: 500,
-    Height: 380,
+    url: 'https://www.youtube.com/watch?v=A7IMBnMU5a4',
+    state: {
+      x: 1351,
+      y: 400,
+      w: 500,
+      h: 380,
+    },
+    params: {},
   },
-])
+]
+
+export const windows = writable(initialWindows)
