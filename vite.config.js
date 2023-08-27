@@ -8,10 +8,15 @@ export default defineConfig({
     svelte({
       // Reference: https://github.com/sveltejs/vite-plugin-svelte/blob/main/docs/config.md#onwarn
       onwarn(warning, defaultHandler) {
-        if (warning.code == "a11y-no-static-element-interactions") return;
-        defaultHandler(warning);
-        console.log(`[Svelte] ${warning.code}: ${warning.message}`);
-      }
-    })
-  ]
-});
+        const disabledWarnings = [
+          'a11y-no-noninteractive-element-interactions',
+          'a11y-no-static-element-interactions',
+          'a11y-click-events-have-key-events',
+        ]
+        if (disabledWarnings.indexOf(warning.code) != -1) return
+        defaultHandler(warning)
+        console.log(`[Svelte] ${warning.code}: ${warning.message}`)
+      },
+    }),
+  ],
+})

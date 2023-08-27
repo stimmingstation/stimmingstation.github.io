@@ -1,18 +1,13 @@
 <script>
-  export let Url
-  export let PosX
-  export let PosY
-
-  // default 16:9
-  export let Width = 640
-  export let Height = 360
+  /** @type {import('../store').Window} */
+  export let window
 
   import Window from '../Window.svelte'
 </script>
 
-<Window title="Custom" {PosX} {PosY} {Width} {Height}>
+<Window title="Custom" state={window.state}>
   <div class="window">
-    <iframe scrolling="no" title="Custom" src={Url} />
+    <iframe scrolling="yes" title="Custom" src={window.url} />
   </div>
 </Window>
 

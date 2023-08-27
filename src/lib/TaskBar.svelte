@@ -1,26 +1,33 @@
 <script>
-  import { createEventDispatcher, onMount } from 'svelte'
-  import StartMenu from './StartMenu.svelte'
+  import { onMount } from 'svelte'
 
-  let src = 'logo_start.png'
+  export let menu
+
+  let startOpen = false
 
   let time = new Date()
-  let access = {
-    TaskMenu: false,
-    Youtube: true,
-    Calculator: false,
-  }
-
   const watchClock = time => (time < 10 ? `0${time}` : time)
-  const toggleAccess = name => {
-    access[name] = true
-  }
-
   $: hours = watchClock(time.getHours())
   $: minutes = watchClock(time.getMinutes())
   $: seconds = watchClock(time.getSeconds())
 
+  /** @type HTMLElement */
+  let menuElement = undefined
+  let startButton = undefined
+
   onMount(() => {
+    document.addEventListener(
+      'click',
+      function (event) {
+        if (!event.target) return
+        if (event.target == startButton) {
+          startOpen = !startOpen
+        } else if (startOpen && !menuElement.contains(event.target)) {
+          startOpen = false
+        }
+      },
+      false,
+    )
     const interval = setInterval(() => {
       time = new Date()
     }, 1000)
@@ -29,17 +36,31 @@
       clearInterval(interval)
     }
   })
-
-  let dispatch = createEventDispatcher()
-
-  function clickStart() {
-    dispatch('clickStart')
-  }
 </script>
 
-{#if access.TaskMenu}
-  <StartMenu {toggleAccess} />
-{/if}
+<div
+  class="menu-panel {startOpen ? 'menu-panel--show' : ''}"
+  bind:this={menuElement}
+>
+  {#if startOpen}
+    <ul>
+      {#each menu as item (item)}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <li
+          on:click={async () => {
+            startOpen = false
+            if (item.click) {
+              item.click()
+            }
+          }}
+        >
+          {item.name}
+        </li>
+      {/each}
+    </ul>
+  {/if}
+</div>
 
 <header id="taskbar">
   <nav>
@@ -48,9 +69,9 @@
         <button
           id="start-panel"
           class="btn--start menu--button"
-          on:click={() => (access.TaskMenu = !access.TaskMenu)}
+          bind:this={startButton}
         >
-          <img {src} alt="logo_start" />
+          <img src="/logo_start.png" alt="logo_start" />
           Start
         </button>
       </div>
@@ -156,5 +177,54 @@
 
   .deep-box {
     font-size: 10px;
+  }
+
+  .menu-panel {
+    border-top: 1px solid silver;
+    border-left: 1px solid silver;
+    background-color: silver;
+    width: 200px;
+    display: none;
+    z-index: 99999999;
+  }
+
+  .menu-panel--show {
+    border-top: 1px solid silver;
+    border-left: 1px solid silver;
+    background-color: silver;
+    width: 200px;
+    display: block !important;
+    position: absolute;
+    bottom: 28px;
+  }
+
+  .menu-panel ul {
+    color: #000;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+    box-shadow:
+      inset 1px 1px #dfdfdf,
+      1px 0 #000,
+      0 1px #000,
+      1px 1px #000;
+    background-color: silver;
+  }
+
+  .menu-panel ul li {
+    /* margin-left: 0.5em; */
+    font-size: 8px;
+    color: #000;
+    padding: 3px;
+    padding-left: 0.5em;
+    cursor: pointer;
+    display: flex;
+  }
+
+  .menu-panel ul li:hover {
+    background-color: #0090e4;
+    color: #fff;
+    text-shadow: 0 0 transparent !important;
   }
 </style>

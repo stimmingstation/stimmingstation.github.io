@@ -1,7 +1,9 @@
 <script>
-  import { draggable as AgnosticDraggable } from 'svelte-agnostic-draggable'
-  import { onMount } from 'svelte'
-  import { zIndex } from './store.js'
+  import { draggable as agnosticDraggable } from 'svelte-agnostic-draggable'
+  import { onMount, createEventDispatcher } from 'svelte'
+  import { zIndex, windows } from './store.js'
+
+  const dispatch = createEventDispatcher()
 
   /** @type {import('./store.js').WindowState} */
   export let state
@@ -9,6 +11,7 @@
   export let draggable = true
   export let resizable = true
   export let topmost = false
+  export let special = ''
 
   let isResizing = false
   let initialWidth = state.w
@@ -16,6 +19,10 @@
 
   /** @type HTMLElement */
   export let window = undefined
+
+  function moveUp() {
+    window.style.zIndex = '' + $zIndex++
+  }
 
   onMount(() => {
     if (!topmost) {
@@ -25,13 +32,15 @@
 
       // add listener to bring window to front
       window.addEventListener('mousedown', () => {
-        window.style.zIndex = '' + $zIndex++
+        moveUp()
       })
 
       // add listener to bring window to front
       window.addEventListener('touchstart', () => {
-        window.style.zIndex = '' + $zIndex++
+        moveUp()
       })
+
+      moveUp()
     }
   })
 
@@ -59,69 +68,63 @@
   function onDragStop() {
     isResizing = false
   }
+
+  function onSpecialClicked() {
+    dispatch('special')
+  }
+
+  function onMinimizeClicked() {
+    alert('TODO')
+  }
+
+  function onCloseClicked() {
+    $windows = $windows.filter(w => w.state != state)
+    dispatch('close')
+  }
+
+  function conditionalDraggable(draggableElement, options) {
+    if (draggable) {
+      return agnosticDraggable(draggableElement, options)
+    } else {
+      return { destroy() {} }
+    }
+  }
 </script>
 
-{#if draggable}
-  <div
-    class="window"
-    use:AgnosticDraggable={{ handle: '.window--header', cursor: 'grabbing' }}
-    style="width:{state.w}px; height:{state.h}px;"
-    bind:this={window}
-  >
-    <div class="draggable window--header">
-      <p class="window--title">{title}</p>
-      <div class="window--button-group">
-        <button class="window--button">?</button>
-        <button class="window--button">_</button>
-        <button
-          class="window--button"
-          on:click={() => window.parentNode.removeChild(window)}>X</button
+<div
+  class="window"
+  use:conditionalDraggable={{
+    handle: '.window--header',
+    cursor: 'grabbing',
+  }}
+  style="width:{state.w}px; height:{state.h}px;"
+  bind:this={window}
+>
+  <div class="{draggable ? 'draggable ' : ''}window--header">
+    <p class="window--title">{title}</p>
+    <div class="window--button-group">
+      {#if special}
+        <button class="window--button" on:click={onSpecialClicked}
+          >{special}</button
         >
-      </div>
+      {/if}
+      <!-- <button class="window--button" on:click={onMinimizeClicked}>_</button> -->
+      <button class="window--button" on:click={onCloseClicked}>❌</button>
     </div>
-    <div class="window--content">
-      <slot />
-    </div>
+  </div>
+  <div class="window--content">
+    <slot />
+  </div>
 
-    {#if resizable}
-      <div
-        class="draggable window--resize"
-        use:AgnosticDraggable={{ helper: 'clone', revert: true }}
-        on:drag:move={onDragMove}
-        on:drag:stop={onDragStop}
-      ></div>
-    {/if}
-  </div>
-{:else}
-  <div
-    class="window"
-    style="width:{state.w}px; height:{state.h}px;"
-    bind:this={window}
-  >
-    <div class="window--header">
-      <p class="window--title">{title}</p>
-      <div class="window--button-group">
-        <button class="window--button">?</button>
-        <button class="window--button">_</button>
-        <button
-          class="window--button"
-          on:click={() => window.parentNode.removeChild(window)}>X</button
-        >
-      </div>
-    </div>
-    <div class="window--content">
-      <slot />
-    </div>
-    {#if resizable}
-      <div
-        class="draggable window--resize"
-        use:AgnosticDraggable={{ helper: 'clone', revert: true }}
-        on:drag:move={onDragMove}
-        on:drag:stop={onDragStop}
-      ></div>
-    {/if}
-  </div>
-{/if}
+  {#if resizable}
+    <div
+      class="draggable window--resize"
+      use:agnosticDraggable={{ helper: 'clone', revert: true }}
+      on:drag:move={onDragMove}
+      on:drag:stop={onDragStop}
+    ></div>
+  {/if}
+</div>
 
 <style>
   .draggable {
@@ -214,7 +217,7 @@
       0 1px #000,
       1px 1px #000;
     background-color: silver;
-    font-size: 12px;
+    font-size: 9px;
     width: 14px;
     height: 14px;
     line-height: 14px !important;

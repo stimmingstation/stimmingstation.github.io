@@ -3,45 +3,76 @@
   import YouTube from './lib/applications/YouTube.svelte'
   import Custom from './lib/applications/Custom.svelte'
   import { windows } from './lib/store.js'
+  import AddWindowModal from './lib/startmenu/AddWindowModal.svelte'
+  import { extractYouTubeVideoId } from './lib/utils'
+
+  let addWindowModal = false
+  let newX = 25
+  let newY = 30
+
+  function openWindow(url) {
+    $windows = [
+      ...$windows,
+      ...[
+        {
+          url: url,
+          state: {
+            x: newX,
+            y: newY,
+            w: 500,
+            h: 380,
+          },
+          params: {},
+        },
+      ],
+    ]
+    newX += 10
+    newY += 10
+  }
+
+  function openCustomUrl(event) {
+    const { url } = event.detail
+    openWindow(url)
+  }
 </script>
 
 <main class="desktop-view">
-  <button
-    on:click={() => {
-      $windows = [
-        ...$windows,
-        ...[
-          {
-            url: 'https://www.youtube.com/watch?v=A7IMBnMU5a4',
-            state: {
-              x: 1351,
-              y: 400,
-              w: 500,
-              h: 380,
-            },
-            params: {},
-          },
-        ],
-      ]
-    }}
-  >
-    Test Button
-  </button>
-
-  {#each $windows as window}
-    <YouTube {window} />
-    <!-- {:else if window.type === 'Custom'}
-      <Custom
-        Url={window.videoUrl}
-        PosX={window.PosX}
-        PosY={window.PosY}
-        Width={window.Width}
-        Height={window.Height}
-      />
-    {/if} -->
+  <!--
+    We use the window.state object pointer as a key to make things work
+    Reference: https://learn.svelte.dev/tutorial/keyed-each-blocks
+  -->
+  {#each $windows as w (w.state)}
+    {#if extractYouTubeVideoId(w.url)}
+      <YouTube window={w} />
+    {:else}
+      <Custom window={w} />
+    {/if}
   {/each}
 
-  <TaskBar />
+  <!-- HACK: should become part of the $windows store instead -->
+  {#if addWindowModal}
+    <AddWindowModal
+      on:close={() => (addWindowModal = false)}
+      on:openUrl={openCustomUrl}
+    />
+  {/if}
+
+  <TaskBar
+    menu={[
+      {
+        name: 'New Window',
+        click() {
+          addWindowModal = true
+        },
+      },
+      {
+        name: 'GitHub',
+        click() {
+          window.open('https://git.stimming.club', '_blank')
+        },
+      },
+    ]}
+  />
 </main>
 
 <style>

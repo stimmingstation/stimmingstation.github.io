@@ -1,7 +1,8 @@
 <script>
-  import { onMount } from 'svelte'
-
+  import { onMount, createEventDispatcher } from 'svelte'
   import Window from '../Window.svelte'
+
+  const dispatch = createEventDispatcher()
 
   /** @type HTMLElement */
   let window
@@ -14,27 +15,53 @@
     h: 55,
   }
 
+  /** @type HTMLElement */
+  let input = undefined
+
   // force window to be on top and centered
   onMount(() => {
-    window.style.zIndex = '9999'
+    window.style.zIndex = '99999999'
     window.style.left = `calc(50% - ${state.w / 2}px)`
     window.style.top = `calc(50% - ${state.h / 2}px)`
+    input.focus()
   })
+
+  function handleSubmit(e) {
+    const formData = new FormData(e.target)
+
+    const data = {}
+    for (let field of formData) {
+      const [key, value] = field
+      data[key] = value
+    }
+    console.log(data)
+
+    const url = data['url']
+
+    const { target } = e
+    dispatch('openUrl', { target, url })
+    dispatch('close')
+  }
 </script>
 
 <Window
-  title="Add Youtube Video"
+  title="Add Window"
   {state}
   draggable={false}
   resizable={false}
   topmost={true}
   bind:window
+  on:close={() => dispatch('close')}
 >
   <div style="text-align: center;">
-    <!--    <form on:submit|preventDefault={}>-->
-    <form>
+    <form on:submit|preventDefault={handleSubmit}>
       <label>
-        url: <input name="url" type="url" />
+        URL: <input
+          name="url"
+          type="url"
+          autocomplete="off"
+          bind:this={input}
+        />
       </label>
       <button type="submit">Load</button>
     </form>
