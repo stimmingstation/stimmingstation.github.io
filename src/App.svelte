@@ -1,7 +1,79 @@
 <script>
-  import Footer from "./Footer.svelte";
-  import YouTube from "./lib/YouTube.svelte";
+  import TaskBar from './lib/TaskBar.svelte'
+  import YouTube from './lib/applications/YouTube.svelte'
+  import Custom from './lib/applications/Custom.svelte'
+  import { windows } from './lib/store.js'
+  import AddWindowModal from './lib/startmenu/AddWindowModal.svelte'
+  import { extractYouTubeVideoId } from './lib/utils'
+
+  let addWindowModal = false
+  let newX = 25
+  let newY = 30
+
+  function openWindow(url) {
+    $windows = [
+      ...$windows,
+      ...[
+        {
+          url: url,
+          state: {
+            x: newX,
+            y: newY,
+            w: 500,
+            h: 380,
+          },
+          params: {},
+        },
+      ],
+    ]
+    newX += 10
+    newY += 10
+  }
+
+  function openCustomUrl(event) {
+    const { url } = event.detail
+    openWindow(url)
+  }
 </script>
+
+<main class="desktop-view">
+  <!--
+    We use the window.state object pointer as a key to make things work
+    Reference: https://learn.svelte.dev/tutorial/keyed-each-blocks
+  -->
+  {#each $windows as w (w.state)}
+    {#if extractYouTubeVideoId(w.url)}
+      <YouTube window={w} />
+    {:else}
+      <Custom window={w} />
+    {/if}
+  {/each}
+
+  <!-- HACK: should become part of the $windows store instead -->
+  {#if addWindowModal}
+    <AddWindowModal
+      on:close={() => (addWindowModal = false)}
+      on:openUrl={openCustomUrl}
+    />
+  {/if}
+
+  <TaskBar
+    menu={[
+      {
+        name: 'New Window',
+        click() {
+          addWindowModal = true
+        },
+      },
+      {
+        name: 'GitHub',
+        click() {
+          window.open('https://git.stimming.club', '_blank')
+        },
+      },
+    ]}
+  />
+</main>
 
 <style>
   .desktop-view {
@@ -13,12 +85,3 @@
     position: relative;
   }
 </style>
-
-<main class="desktop-view">
-<!--  1st 274, 51 2nd 37, 81 3rd 1312, 41-->
-  <YouTube videoUrl="https://www.youtube.com/watch?v=REuKymvrrqk" initX={274} initY={51} --width="1280px"/>
-  <YouTube videoUrl="https://www.youtube.com/watch?v=ChBg4aowzX8" initX={37} initY={81} />
-  <YouTube videoUrl="https://www.youtube.com/watch?v=Q4MOP8s9KyY" initX={1312} initY={41} />
-  <Footer />
-</main>
-

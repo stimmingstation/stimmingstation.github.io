@@ -1,112 +1,237 @@
 <script>
-    export let title;
+  import { draggable as agnosticDraggable } from 'svelte-agnostic-draggable'
+  import { onMount, createEventDispatcher } from 'svelte'
+  import { zIndex, windows } from './store.js'
 
-    export let posX = 0;
-    export let posY = 0;
+  const dispatch = createEventDispatcher()
 
-    let prevPosX = 0;
-    let prevPosY = 0;
+  /** @type {import('./store.js').WindowState} */
+  export let state
+  export let title // TODO: move to state?
+  export let draggable = true
+  export let resizable = true
+  export let topmost = false
+  export let special = ''
 
-    let active = false;
+  let isResizing = false
+  let initialWidth = state.w
+  let initialHeight = state.h
 
-    let windowNode;
-    let windowChildNode;
+  /** @type HTMLElement */
+  export let window = undefined
 
-    const dragStart = e => {
-        e.preventDefault();
-        active = true;
-    };
+  function moveUp() {
+    window.style.zIndex = '' + $zIndex++
+  }
 
-    const dragEnd = e => {
-        e.preventDefault();
-        active = false;
-    };
+  onMount(() => {
+    if (!topmost) {
+      // set the initial position of the window
+      window.style.left = state.x + 'px'
+      window.style.top = state.y + 'px'
 
-    const drag = e => {
-        e.preventDefault();
+      // add listener to bring window to front
+      window.addEventListener('mousedown', () => {
+        moveUp()
+      })
 
-        if (active) {
-            posX += e.movementX;
-            posY += e.movementY;
+      // add listener to bring window to front
+      window.addEventListener('touchstart', () => {
+        moveUp()
+      })
 
-            console.log(`posX: ${posX}, posY: ${posY}`)
-        }
-    };
+      moveUp()
+    }
+  })
+
+  // map all touch events to mouse events
+  import mapTouchToMouseFor from 'svelte-touch-to-mouse'
+
+  mapTouchToMouseFor('.draggable')
+
+  // Svelte Event Handling
+  function onDragMove(event) {
+    if (resizable) {
+      if (isResizing) {
+        state.w = initialWidth + event.detail.position.left - state.x
+        state.h = initialHeight + event.detail.position.top - state.y
+      } else {
+        state.x = event.detail.position.left
+        initialWidth = state.w
+        state.y = event.detail.position.top
+        initialHeight = state.h
+        isResizing = true
+      }
+    }
+  }
+
+  function onDragStop() {
+    isResizing = false
+  }
+
+  function onSpecialClicked() {
+    dispatch('special')
+  }
+
+  function onMinimizeClicked() {
+    alert('TODO')
+  }
+
+  function onCloseClicked() {
+    $windows = $windows.filter(w => w.state != state)
+    dispatch('close')
+  }
+
+  function conditionalDraggable(draggableElement, options) {
+    if (draggable) {
+      return agnosticDraggable(draggableElement, options)
+    } else {
+      return { destroy() {} }
+    }
+  }
 </script>
 
-<div class="workspace-item workspace-item--window"
-     style="transform: translate3d({posX}px,{posY}px, 0);">
-  <div class="workspace-item__header"
-       on:mousedown={dragStart}
-       on:touchstart={dragStart}>
-    <p>{title}</p>
-    <div class="workspace-item__button">
-      <button class="button-window">?</button>
-      <button class="button-window">_</button>
-      <button class="button-window">X</button>
+<div
+  class="window"
+  use:conditionalDraggable={{
+    handle: '.window--header',
+    cursor: 'grabbing',
+  }}
+  style="width:{state.w}px; height:{state.h}px;"
+  bind:this={window}
+>
+  <div class="{draggable ? 'draggable ' : ''}window--header">
+    <p class="window--title">{title}</p>
+    <div class="window--button-group">
+      {#if special}
+        <button class="window--button" on:click={onSpecialClicked}
+          >{special}</button
+        >
+      {/if}
+      <!-- <button class="window--button" on:click={onMinimizeClicked}>_</button> -->
+      <button class="window--button" on:click={onCloseClicked}>❌</button>
     </div>
   </div>
-  <div class="workspace-item__content">
-    <slot/>
+  <div class="window--content">
+    <slot />
   </div>
+
+  {#if resizable}
+    <div
+      class="draggable window--resize"
+      use:agnosticDraggable={{ helper: 'clone', revert: true }}
+      on:drag:move={onDragMove}
+      on:drag:stop={onDragStop}
+    ></div>
+  {/if}
 </div>
 
-<svelte:window
-    on:touchend={dragEnd}
-    on:touchmove={drag}
-    on:mouseup={dragEnd}
-    on:mousemove={drag}
-/>
-
 <style>
-    .workspace-item {
-        user-select: none;
-    }
+  .draggable {
+    -webkit-touch-callout: none;
+    -ms-touch-action: none;
+    touch-action: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: move;
+  }
 
-    .workspace-item__header {
-        color: #fff;
-        margin-bottom: 2px;
-        display: flex;
-        justify-content: space-between;
-        cursor: move;
-        background-color: #1b4eaa;
-        font-size: 8px;
-        padding: 2px 2px 1px;
-        user-select: none;
-    }
+  .window {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 2px;
+    background: #ccc;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-top: 1px solid silver;
+    border-left: 1px solid silver;
+    box-shadow:
+      1px 0 #000,
+      0 1px #000,
+      1px 1px #000,
+      inset 1px 1px #fff,
+      0 0 150px 1px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
 
-    .workspace-item--window {
-        position: absolute;
-        left: 0;
-        top: 0;
-        padding: 2px;
-        border-right: 1px solid gray;
-        border-bottom: 1px solid gray;
-        background-color: silver;
-        border: 1px solid #555;
-        background: #ccc;
-        border-top: 1px solid silver;
-        border-left: 1px solid silver;
-        box-shadow: 1px 0 #000, 0 1px #000, 1px 1px #000, inset 1px 1px #fff,
-        0 0 150px 1px rgba(0, 0, 0, 0.5);
-    }
+  .window--header {
+    color: #fff;
+    margin-bottom: 2px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #1b4eaa;
+    font-size: 8px;
+    padding: 2px 2px 1px;
+    user-select: none;
+  }
 
-    .workspace-item__content {
-        -webkit-user-drag: none;
-        position: relative;
-    }
+  .window--title {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-    .button-window {
-        color: #000;
-        border-top: 1px solid #fff;
-        border-left: 1px solid #fff;
-        border-right: 1px solid gray;
-        border-bottom: 1px solid gray;
-        box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
-        background-color: silver;
-        font-size: 12px;
-        width: 14px;
-        height: 14px;
-        line-height: 14px !important;
-    }
+  .window--resize {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAiklEQVRYR+WUwQ3AIAwDm3UzUNZtxQ8hhBpIbGhZIKezsVzkJ4z7ZnaXu6oq/wSorVMMwAHqzNvOQQzQAUY/DWIADjBSXmDSd4AO4FnXb3TAozxlB+gAnsxTDMABVpSH7AAdYEX5mR2IVD5lgA4QmfmUAThApvJXO0AHyFS+ZweQyrsG6ADIzNtbD4OSoCHdTWtaAAAAAElFTkSuQmCC');
+    cursor: nwse-resize;
+  }
+
+  .window--content {
+    -webkit-user-drag: none;
+    position: relative;
+    padding: 3px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .window--button-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  button {
+    outline: none;
+    cursor: pointer;
+  }
+
+  .window--button {
+    color: #000;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+    box-shadow:
+      inset 1px 1px #dfdfdf,
+      1px 0 #000,
+      0 1px #000,
+      1px 1px #000;
+    background-color: silver;
+    font-size: 9px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px !important;
+  }
+
+  .window--button:active {
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
+    box-shadow:
+      inset 1px 1px grey,
+      1px 0 #fff,
+      0 1px #fff,
+      1px 1px #fff;
+  }
 </style>
