@@ -1,7 +1,8 @@
 <script>
     export let videoUrl;
-    export let PosX;
-    export let PosY;
+
+    export let PosX = 0;
+    export let PosY = 0;
 
     // default 16:9
     export let Width = 640;
@@ -45,11 +46,12 @@
 {:then videoTitle}
 
   <Window title="YouTube - {videoTitle}" PosX={PosX} PosY={PosY} Width={Width} Height={Height}>
-    <div class="youtube">
+    <!-- Reference: https://developers.google.com/youtube/player_parameters#Parameters -->
+    <div class="video">
       <iframe
           scrolling="no"
           title={videoTitle}
-          src="https://www.youtube.com/embed/{videoId}?autoplay=1&rel=0&mute=1&loop=1&controls=0&showinfo=0&modestbranding=1&vq=hd1080"
+          src="https://www.youtube.com/embed/{videoId}?playlist={videoId}&autoplay=1&rel=0&mute=1&loop=1&controls=0&showinfo=0&playsinline=1"
           allow="autoplay"
           frameborder="0"
       />
@@ -61,11 +63,11 @@
 {/await}
 
 <style>
-    .youtube {
+    .video {
         pointer-events: none;
     }
 
-    .youtube iframe {
+    .video iframe {
         position: absolute;
         width: 100%;
         height: 100%; /* Make the iframe take the full height of the container */
