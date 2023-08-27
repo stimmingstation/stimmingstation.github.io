@@ -1,8 +1,8 @@
 <script>
-    import TaskBar from "./lib/TaskBar.svelte";
-    import YouTube from "./lib/applications/YouTube.svelte";
-    import Custom from "./lib/applications/Custom.svelte";
-    import AddYoutube from './lib/startmenu/AddYoutube.svelte'
+  import TaskBar from './lib/TaskBar.svelte'
+  import YouTube from './lib/applications/YouTube.svelte'
+  import Custom from './lib/applications/Custom.svelte'
+  import {windows} from './lib/store.js'
 </script>
 
 <style>
@@ -16,17 +16,37 @@
     }
 </style>
 
-<main class="desktop-view">
-  <!-- Top Left -->
-  <YouTube videoUrl="https://www.youtube.com/watch?v=ChBg4aowzX8" PosX={17} PosY={21} Width={630} Height={354}/>
-  <!-- Top Right -->
-  <YouTube videoUrl="https://www.youtube.com/watch?v=Q4MOP8s9KyY" PosX={1187} PosY={25} Width={630} Height={354}/>
-  <!-- Middle -->
-  <YouTube videoUrl="https://www.youtube.com/watch?v=REuKymvrrqk" PosX={473} PosY={242} Width={862} Height={483}/>
-  <!-- Bottom left -->
-  <YouTube videoUrl="https://www.youtube.com/watch?v=gHIS-Xb2DbY" PosX={13} PosY={500} Width={628} Height={354}/>
-  <!-- Bottom right -->
-  <YouTube videoUrl="https://www.youtube.com/watch?v=A7IMBnMU5a4" PosX={1351} PosY={400} Width={500} Height={380}/>
+<main class='desktop-view'>
 
-  <TaskBar/>
+  <button on:click={() => {$windows = [...$windows, ...[{
+      type: 'YouTube',
+      videoUrl: 'https://www.youtube.com/watch?v=A7IMBnMU5a4',
+      PosX: 1351,
+      PosY: 400,
+      Width: 500,
+      Height: 380,
+    }]]}}>
+    Click Me
+  </button>
+
+  {#each $windows as window}
+    {#if window.type === "YouTube"}
+      <YouTube
+        videoUrl={window.videoUrl}
+        PosX={window.PosX}
+        PosY={window.PosY}
+        Width={window.Width}
+        Height={window.Height}
+      />
+    {:else if window.type === "Custom"}
+      <Custom
+        PosX={window.PosX}
+        PosY={window.PosY}
+        Width={window.Width}
+        Height={window.Height}
+      />
+    {/if}
+  {/each}
+
+  <TaskBar />
 </main>

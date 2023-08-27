@@ -1,6 +1,6 @@
 const routes_start_menu = [
   {
-    name: 'AddYoutube',
+    startMenuName: 'Add YouTube Video',
   },
 ]
 

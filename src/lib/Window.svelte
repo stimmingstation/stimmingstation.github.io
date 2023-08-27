@@ -22,12 +22,6 @@
   let InitialHeight = Height
 
   let Window
-  let zIndexValue
-
-  // subscribe to the zIndex store
-  zIndex.subscribe((value) => {
-    zIndexValue = value
-  })
 
   onMount(() => {
     if (!TopMost) {
@@ -37,16 +31,12 @@
 
       // add listener to bring window to front
       Window.addEventListener('mousedown', () => {
-        // increment the zIndex store
-        zIndex.update(n => n + 1)
-        Window.style.zIndex = zIndexValue
+        Window.style.zIndex = $zIndex++;
       })
 
       // add listener to bring window to front
       Window.addEventListener('touchstart', () => {
-        // increment the zIndex store
-        zIndex.update(n => n + 1)
-        Window.style.zIndex = zIndexValue
+        Window.style.zIndex = $zIndex++;
       })
     }
   })

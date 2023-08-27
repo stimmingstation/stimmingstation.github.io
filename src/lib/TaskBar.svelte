@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from 'svelte'
   import StartMenu from "./StartMenu.svelte";
 
   let src = "logo_start.png";
@@ -29,6 +29,12 @@
       clearInterval(interval);
     };
   });
+
+    let dispatch = createEventDispatcher()
+
+  function clickStart() {
+    dispatch('clickStart');
+  }
 </script>
 
 <style>
@@ -114,9 +120,9 @@
   }
 </style>
 
-<!-- {#if access.TaskMenu}
+{#if access.TaskMenu}
   <StartMenu {toggleAccess} />
-{/if} -->
+{/if}
 
 <header id="taskbar">
   <nav>

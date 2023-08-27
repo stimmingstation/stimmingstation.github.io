@@ -1,5 +1,6 @@
 <script>
   import routes_start_menu from './startmenu/routes.js'
+  import { createEventDispatcher } from 'svelte'
 
   export let toggleAccess
 
@@ -55,8 +56,7 @@
 <div class='menu-panel menu-panel--show'>
   <ul id='menu-panel-items'>
     {#each routes_start_menu as route}
-      <li on:click={() => menuAction(route.name)}>{route.name}</li>
+      <li>{route.startMenuName}</li>
     {/each}
-    <li>Add Youtube Video</li>
   </ul>
 </div>
