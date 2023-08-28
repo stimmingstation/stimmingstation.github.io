@@ -1,5 +1,5 @@
 <script>
-  /** @type {import('../store').Window} */
+  /** @type {import('../store.js').Window} */
   export let window
 
   import Window from '../Window.svelte'
@@ -7,7 +7,7 @@
 
 <Window title="Custom" state={window.state}>
   <div class="window">
-    <iframe scrolling="yes" title="Custom" src={window.url} />
+    <iframe scrolling="yes" title="Custom" src={window.url} allow="autoplay" />
   </div>
 </Window>
 

@@ -1,6 +1,6 @@
 /** @param {string} url */
 export function extractYouTubeVideoId(url) {
-  const preMatch = url.match(/:\/\/(www\.)?(youtube\.com|youtu\.be)/)
+  const preMatch = url.match(/(youtube\.com|youtu\.be)\//)
   if (preMatch == null) return null
   let rx =
     /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/
