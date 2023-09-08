@@ -30,11 +30,6 @@
     newX += 10
     newY += 10
   }
-
-  function openCustomUrl(event) {
-    const { url } = event.detail
-    openWindow(url)
-  }
 </script>
 
 <main class="desktop-view">
@@ -54,7 +49,7 @@
   {#if addWindowModal}
     <AddWindowModal
       on:close={() => (addWindowModal = false)}
-      on:openUrl={openCustomUrl}
+      on:openUrl={e => openWindow(e.detail.url)}
     />
   {/if}
 
@@ -70,6 +65,12 @@
         name: 'JS Paint',
         click() {
           openWindow('https://jspaint.app/', 'JS Paint')
+        },
+      },
+      {
+        name: 'Compiler Explorer',
+        click() {
+          openWindow('https://godbolt.org', 'Compiler Explorer')
         },
       },
       {
