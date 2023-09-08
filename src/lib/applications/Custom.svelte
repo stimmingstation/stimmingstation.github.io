@@ -7,7 +7,7 @@
 
 <Window title={window.title} state={window.state}>
   <div class="window">
-    <iframe scrolling="yes" title="Custom" src={window.url} allow="autoplay" />
+    <iframe scrolling="yes" title={window.title} src={window.url} allow="autoplay" />
   </div>
 </Window>
 
