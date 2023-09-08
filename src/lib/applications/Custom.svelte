@@ -5,7 +5,7 @@
   import Window from '../Window.svelte'
 </script>
 
-<Window title="Custom" state={window.state}>
+<Window title={window.title} state={window.state}>
   <div class="window">
     <iframe scrolling="yes" title="Custom" src={window.url} allow="autoplay" />
   </div>
@@ -14,12 +14,11 @@
 <style>
   .window iframe {
     position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
     width: 100%;
-    height: 100%; /* Make the iframe take the full height of the container */
-
-    /* Center the content both vertically and horizontally */
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
+    height: 100%;
   }
 </style>
