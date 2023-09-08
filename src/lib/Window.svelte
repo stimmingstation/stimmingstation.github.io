@@ -13,12 +13,16 @@
   export let topmost = false
   export let special = ''
 
+  /** @type HTMLElement */
+  export let window = undefined
+
+  /** @type HTMLElement */
+  let content = undefined
+
   let isResizing = false
   let initialWidth = state.w
   let initialHeight = state.h
-
-  /** @type HTMLElement */
-  export let window = undefined
+  let oldPointerEvents = null
 
   function moveUp() {
     window.style.zIndex = '' + $zIndex++
@@ -50,6 +54,16 @@
   mapTouchToMouseFor('.draggable')
 
   // Svelte Event Handling
+  function onDragStart(_) {
+    oldPointerEvents = window.style.pointerEvents
+    content.style.pointerEvents = 'none'
+  }
+
+  function onDragLeave(_) {
+    content.style.pointerEvents = oldPointerEvents
+    oldPointerEvents = null
+  }
+
   function onDragMove(event) {
     if (resizable) {
       if (isResizing) {
@@ -67,14 +81,13 @@
 
   function onDragStop() {
     isResizing = false
+
+    // NOTE: We restore the 'pointer-events: none'
+    onDragLeave()
   }
 
   function onSpecialClicked() {
     dispatch('special')
-  }
-
-  function onMinimizeClicked() {
-    alert('TODO')
   }
 
   function onCloseClicked() {
@@ -97,6 +110,8 @@
     handle: '.window--header',
     cursor: 'grabbing',
   }}
+  on:drag:start={onDragStart}
+  on:drag:stop={onDragLeave}
   style="width:{state.w}px; height:{state.h}px;"
   bind:this={window}
 >
@@ -109,11 +124,10 @@
           on:click={onSpecialClicked}>{special}</button
         >
       {/if}
-      <!-- <button class="window--button" on:click={onMinimizeClicked}>_</button> -->
       <button class="window--button" on:click={onCloseClicked}>❌</button>
     </div>
   </div>
-  <div class="window--content">
+  <div class="window--content" bind:this={content}>
     <slot />
   </div>
 
@@ -121,6 +135,7 @@
     <div
       class="draggable window--resize"
       use:agnosticDraggable={{ helper: 'clone', revert: true }}
+      on:drag:start={onDragStart}
       on:drag:move={onDragMove}
       on:drag:stop={onDragStop}
     ></div>
