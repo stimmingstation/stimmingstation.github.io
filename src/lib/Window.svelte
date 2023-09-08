@@ -104,8 +104,9 @@
     <p class="window--title">{title}</p>
     <div class="window--button-group">
       {#if special}
-        <button class="window--button" on:click={onSpecialClicked}
-          >{special}</button
+        <button
+          class="window--button window--special-button"
+          on:click={onSpecialClicked}>{special}</button
         >
       {/if}
       <!-- <button class="window--button" on:click={onMinimizeClicked}>_</button> -->
@@ -142,7 +143,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    padding: 2px;
+    padding: 2px 2px 18px 2px;
     background: #ccc;
     border-right: 1px solid gray;
     border-bottom: 1px solid gray;
@@ -164,7 +165,7 @@
     justify-content: space-between;
     background-color: #1b4eaa;
     font-size: 8px;
-    padding: 2px 2px 1px;
+    padding: 1px 0 2px 5px;
     user-select: none;
   }
 
@@ -176,10 +177,10 @@
 
   .window--resize {
     position: absolute;
-    right: 0;
-    bottom: 0;
     width: 32px;
     height: 32px;
+    right: 3px;
+    bottom: 2px;
     background-color: transparent;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAiklEQVRYR+WUwQ3AIAwDm3UzUNZtxQ8hhBpIbGhZIKezsVzkJ4z7ZnaXu6oq/wSorVMMwAHqzNvOQQzQAUY/DWIADjBSXmDSd4AO4FnXb3TAozxlB+gAnsxTDMABVpSH7AAdYEX5mR2IVD5lgA4QmfmUAThApvJXO0AHyFS+ZweQyrsG6ADIzNtbD4OSoCHdTWtaAAAAAElFTkSuQmCC');
     cursor: nwse-resize;
@@ -188,7 +189,6 @@
   .window--content {
     -webkit-user-drag: none;
     position: relative;
-    padding: 3px;
     width: 100%;
     height: 100%;
   }
@@ -198,6 +198,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding-right: 2px;
   }
 
   button {
@@ -221,6 +222,11 @@
     width: 14px;
     height: 14px;
     line-height: 14px !important;
+  }
+
+  .window--special-button {
+    color: transparent;
+    text-shadow: 0 0 0 green;
   }
 
   .window--button:active {

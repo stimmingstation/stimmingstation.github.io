@@ -10,11 +10,12 @@
   let newX = 25
   let newY = 30
 
-  function openWindow(url) {
+  function openWindow(url, title = 'Custom') {
     $windows = [
       ...$windows,
       ...[
         {
+          title: title,
           url: url,
           state: {
             x: newX,
@@ -63,6 +64,12 @@
         name: 'New Window',
         click() {
           addWindowModal = true
+        },
+      },
+      {
+        name: 'JS Paint',
+        click() {
+          openWindow('https://jspaint.app/', 'JS Paint')
         },
       },
       {
