@@ -11,7 +11,7 @@
   let newX = 25
   let newY = 30
 
-  function openWindow(url, title = 'Custom') {
+  function openWindow(url, title = 'Custom', width = 500, height = 380) {
     $windows = [
       ...$windows,
       ...[
@@ -21,8 +21,8 @@
           state: {
             x: newX,
             y: newY,
-            w: 500,
-            h: 380,
+            w: width,
+            h: height,
           },
           params: {},
         },
@@ -90,6 +90,8 @@
           openWindow(
             'https://cdn.dos.zone/custom/dos/ultimate-doom.jsdos',
             'DOOM',
+            533,
+            354
           )
         },
       },
