@@ -5,7 +5,7 @@
   const dispatch = createEventDispatcher()
 
   /** @type HTMLElement */
-  let window
+  let root
 
   /** @type {import('../store').WindowState} */
   let state = {
@@ -20,9 +20,9 @@
 
   // force window to be on top and centered
   onMount(() => {
-    window.style.zIndex = '99999999'
-    window.style.left = `calc(50% - ${state.w / 2}px)`
-    window.style.top = `calc(50% - ${state.h / 2}px)`
+    root.style.zIndex = '99999999'
+    root.style.left = `calc(50% - ${state.w / 2}px)`
+    root.style.top = `calc(50% - ${state.h / 2}px)`
     input.focus()
   })
 
@@ -50,7 +50,7 @@
   draggable={false}
   resizable={false}
   topmost={true}
-  bind:window
+  bind:root
   on:close={() => dispatch('close')}
 >
   <div style="text-align: center;">

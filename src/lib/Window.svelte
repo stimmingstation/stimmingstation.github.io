@@ -14,7 +14,7 @@
   export let special = ''
 
   /** @type HTMLElement */
-  export let window = undefined
+  export let root = undefined
 
   /** @type HTMLElement */
   let content = undefined
@@ -25,22 +25,22 @@
   let oldPointerEvents = null
 
   function moveUp() {
-    window.style.zIndex = '' + $zIndex++
+    root.style.zIndex = '' + $zIndex++
   }
 
   onMount(() => {
     if (!topmost) {
       // set the initial position of the window
-      window.style.left = state.x + 'px'
-      window.style.top = state.y + 'px'
+      root.style.left = state.x + 'px'
+      root.style.top = state.y + 'px'
 
       // add listener to bring window to front
-      window.addEventListener('mousedown', () => {
+      root.addEventListener('mousedown', () => {
         moveUp()
       })
 
       // add listener to bring window to front
-      window.addEventListener('touchstart', () => {
+      root.addEventListener('touchstart', () => {
         moveUp()
       })
 
@@ -55,7 +55,7 @@
 
   // Svelte Event Handling
   function onDragStart(_) {
-    oldPointerEvents = window.style.pointerEvents
+    oldPointerEvents = root.style.pointerEvents
     content.style.pointerEvents = 'none'
   }
 
@@ -113,7 +113,7 @@
   on:drag:start={onDragStart}
   on:drag:stop={onDragLeave}
   style="width:{state.w}px; height:{state.h}px;"
-  bind:this={window}
+  bind:this={root}
 >
   <div class="{draggable ? 'draggable ' : ''}window--header">
     <p class="window--title">{title}</p>

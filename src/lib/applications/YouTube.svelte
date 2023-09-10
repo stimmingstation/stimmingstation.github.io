@@ -1,9 +1,9 @@
 <script>
-  /** @type {import('../store').Window} */
-  export let window
-
   import Window from '../Window.svelte'
   import { extractYouTubeVideoId } from '../utils'
+
+  /** @type {import('../store').WindowContent} */
+  export let content
 
   async function resolveTitle(videoId) {
     let response = fetch(
@@ -13,7 +13,7 @@
     return json.title
   }
 
-  let videoId = extractYouTubeVideoId(window.url) ?? 'D3-vBBQKOYU'
+  let videoId = extractYouTubeVideoId(content.url) ?? 'D3-vBBQKOYU'
   let videoTitlePromise = resolveTitle(videoId)
 
   /** @type Date */
@@ -46,7 +46,7 @@
   })()
 
   function onIframeLoad() {
-    console.log(`iframe loaded: ${window.url}`)
+    console.log(`iframe loaded: ${content.url}`)
     if (videoStart == null) {
       videoStart = new Date()
     }
@@ -58,7 +58,7 @@
 {:then videoTitle}
   <Window
     title="YouTube - {videoTitle}"
-    state={window.state}
+    state={content.state}
     special={muted ? '🔈' : '🔊'}
     on:special={onSpecial}
   >

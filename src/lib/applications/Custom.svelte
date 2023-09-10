@@ -1,13 +1,18 @@
 <script>
-  /** @type {import('../store.js').Window} */
-  export let window
-
   import Window from '../Window.svelte'
+
+  /** @type {import('../store.js').WindowContent} */
+  export let content
 </script>
 
-<Window title={window.title} state={window.state}>
+<Window title={content.title} state={content.state}>
   <div class="window">
-    <iframe scrolling="yes" title={window.title} src={window.url} allow="autoplay" />
+    <iframe
+      scrolling="yes"
+      title={content.title}
+      src={content.url}
+      allow="autoplay"
+    />
   </div>
 </Window>
 

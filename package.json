@@ -18,6 +18,9 @@
   },
   "dependencies": {
     "@egjs/svelte-infinitegrid": "^4.10.2",
+    "emulators": "^0.73.8",
+    "emulators-ui": "^0.73.9",
+    "js-dos": "^7.5.0",
     "svelte-agnostic-draggable": "^0.2.0",
     "svelte-grid-responsive": "^1.2.4",
     "svelte-touch-to-mouse": "^1.0.0"

@@ -5,6 +5,7 @@
   import { windows } from './lib/store.js'
   import AddWindowModal from './lib/startmenu/AddWindowModal.svelte'
   import { extractYouTubeVideoId } from './lib/utils'
+  import DosBox from './lib/applications/DosBox.svelte'
 
   let addWindowModal = false
   let newX = 25
@@ -30,6 +31,13 @@
     newX += 10
     newY += 10
   }
+
+  /** @param {string} url */
+  function deriveUrlType(url) {
+    if (extractYouTubeVideoId(url)) return 'YouTube'
+    if (url.endsWith('.jsdos')) return 'DosBox'
+    return null
+  }
 </script>
 
 <main class="desktop-view">
@@ -38,10 +46,13 @@
     Reference: https://learn.svelte.dev/tutorial/keyed-each-blocks
   -->
   {#each $windows as w (w.state)}
-    {#if extractYouTubeVideoId(w.url)}
-      <YouTube window={w} />
+    {@const urlType = deriveUrlType(w.url)}
+    {#if urlType == 'YouTube'}
+      <YouTube content={w} />
+    {:else if urlType == 'DosBox'}
+      <DosBox content={w} />
     {:else}
-      <Custom window={w} />
+      <Custom content={w} />
     {/if}
   {/each}
 
@@ -71,6 +82,15 @@
         name: 'Compiler Explorer',
         click() {
           openWindow('https://godbolt.org', 'Compiler Explorer')
+        },
+      },
+      {
+        name: 'DOOM',
+        click() {
+          openWindow(
+            'https://cdn.dos.zone/custom/dos/ultimate-doom.jsdos',
+            'DOOM',
+          )
         },
       },
       {

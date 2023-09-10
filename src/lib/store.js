@@ -19,11 +19,11 @@ export const zIndex = writable(1)
  *   url: string,
  *   state: WindowState,
  *   params: any,
- * }} Window
+ * }} WindowContent
  * @todo the params field isn't used right now
  */
 
-/** @type {Window[]} */
+/** @type {WindowContent[]} */
 const initialWindows = [
   {
     url: 'https://www.youtube.com/watch?v=ChBg4aowzX8',
