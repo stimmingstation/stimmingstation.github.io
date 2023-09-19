@@ -91,8 +91,14 @@
             'https://cdn.dos.zone/custom/dos/ultimate-doom.jsdos',
             'DOOM',
             533,
-            354
+            354,
           )
+        },
+      },
+      {
+        name: 'Linux Shell',
+        click() {
+          openWindow('https://shell.segfault.net', 'SegFault')
         },
       },
       {
