@@ -9,16 +9,16 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.4.2",
-    "prettier": "^3.0.2",
-    "prettier-plugin-svelte": "^3.0.3",
-    "svelte": "^4.0.5",
+    "@sveltejs/vite-plugin-svelte": "^3.0.2",
+    "prettier": "^3.2.5",
+    "prettier-plugin-svelte": "^3.1.2",
+    "svelte": "^4.2.10",
     "svelte-grid": "^5.1.2",
-    "vite": "^4.4.5"
+    "vite": "^5.0.12"
   },
   "dependencies": {
-    "@egjs/svelte-infinitegrid": "^4.10.2",
-    "emulators": "^0.73.8",
+    "@egjs/svelte-infinitegrid": "^4.11.1",
+    "emulators": "^0.80.22",
     "emulators-ui": "^0.73.9",
     "js-dos": "^7.5.0",
     "svelte-agnostic-draggable": "^0.2.0",
