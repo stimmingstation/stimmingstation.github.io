@@ -2,7 +2,7 @@
   import TaskBar from './lib/TaskBar.svelte'
   import YouTube from './lib/applications/YouTube.svelte'
   import Custom from './lib/applications/Custom.svelte'
-  import { windows, initialWindows } from './lib/store.js'
+  import { windows, zIndex, initialWindows } from './lib/store.js'
   import AddWindowModal from './lib/startmenu/AddWindowModal.svelte'
   import { extractYouTubeVideoId } from './lib/utils'
   import DosBox from './lib/applications/DosBox.svelte'
@@ -20,6 +20,7 @@
         state: {
           x: newX,
           y: newY,
+          z: $zIndex++,
           w: width,
           h: height,
         },
