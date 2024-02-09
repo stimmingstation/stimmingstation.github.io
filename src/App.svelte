@@ -6,6 +6,7 @@
   import AddWindowModal from './lib/startmenu/AddWindowModal.svelte'
   import { extractYouTubeVideoId } from './lib/utils'
   import DosBox from './lib/applications/DosBox.svelte'
+  import { onMount } from 'svelte'
 
   let addWindowModal = false
   let newX = 25
@@ -37,6 +38,48 @@
     if (url.endsWith('.jsdos')) return 'DosBox'
     return null
   }
+
+  // Comppreses string to GZIP. Retruns a Promise with Base64 string
+  const compress = string => {
+    const blobToBase64 = blob =>
+      new Promise((resolve, _) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result.split(',')[1])
+        reader.readAsDataURL(blob)
+      })
+    const byteArray = new TextEncoder().encode(string)
+    const cs = new CompressionStream('gzip')
+    const writer = cs.writable.getWriter()
+    writer.write(byteArray)
+    writer.close()
+    return new Response(cs.readable).blob().then(blobToBase64)
+  }
+
+  // Decompresses base64 encoded GZIP string. Retruns a string with original text.
+  const decompress = base64string => {
+    const bytes = Uint8Array.from(atob(base64string), c => c.charCodeAt(0))
+    const cs = new DecompressionStream('gzip')
+    const writer = cs.writable.getWriter()
+    writer.write(bytes)
+    writer.close()
+    return new Response(cs.readable).arrayBuffer().then(function (arrayBuffer) {
+      return new TextDecoder().decode(arrayBuffer)
+    })
+  }
+
+  onMount(() => {
+    const hash = window.location.hash
+    if (hash) {
+      try {
+        decompress(hash.slice(1)).then(value => {
+          $windows = JSON.parse(value)
+        })
+      } catch (e) {
+        console.error('Failed to parse windows from URL', e)
+      }
+      window.location.hash = ''
+    }
+  })
 </script>
 
 <main class="desktop-view">
@@ -111,6 +154,16 @@
         click() {
           console.log('Haha, IDA reference')
           $windows = initialWindows()
+        },
+      },
+      {
+        name: 'Share Desktop',
+        click() {
+          const url = new URL(window.location.href)
+          compress(JSON.stringify($windows)).then(value => {
+            url.hash = value
+            navigator.clipboard.writeText(url.href)
+          })
         },
       },
     ]}
