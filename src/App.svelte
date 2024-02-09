@@ -108,10 +108,10 @@
       {
         name: 'Reset Desktop',
         click() {
-          console.log("Haha, IDA reference");
-          $windows = initialWindows();
+          console.log('Haha, IDA reference')
+          $windows = initialWindows()
         },
-      }
+      },
     ]}
   />
 </main>

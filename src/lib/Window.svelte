@@ -25,7 +25,11 @@
   let oldPointerEvents = null
 
   function moveUp() {
-    root.style.zIndex = '' + $zIndex++
+    state.z = $zIndex++
+    root.style.zIndex = '' + state.z
+
+    // HACK: force reactivity
+    $windows = $windows
   }
 
   onMount(() => {
@@ -33,6 +37,7 @@
       // set the initial position of the window
       root.style.left = state.x + 'px'
       root.style.top = state.y + 'px'
+      root.style.zIndex = '' + state.z
 
       // add listener to bring window to front
       root.addEventListener('mousedown', () => {
@@ -43,8 +48,6 @@
       root.addEventListener('touchstart', () => {
         moveUp()
       })
-
-      moveUp()
     }
   })
 
@@ -63,7 +66,7 @@
     oldPointerEvents = null
 
     // HACK: force reactivity
-    $windows = $windows;
+    $windows = $windows
   }
 
   // Drag event handling

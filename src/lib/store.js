@@ -1,13 +1,11 @@
-import { writable } from 'svelte/store'
 import { persisted } from 'svelte-persisted-store'
-
-export const zIndex = writable(1)
 
 /**
  * State for the Window.svelte component
  * @typedef {{
  *   x: number,
  *   y: number,
+ *   z: number,
  *   w: number,
  *   h: number,
  * }} WindowState
@@ -28,10 +26,11 @@ export const zIndex = writable(1)
 export function initialWindows() {
   return [
     {
-      url: 'https://www.youtube.com/watch?v=ChBg4aowzX8',
+      url: 'https://www.youtube.com/watch?v=ChBg4aowzX8' /* Subway Surfers */,
       state: {
         x: 17,
         y: 21,
+        z: 0,
         w: 522,
         h: 312,
       },
@@ -42,6 +41,18 @@ export function initialWindows() {
       state: {
         x: 947,
         y: 5,
+        z: 1,
+        w: 522,
+        h: 312,
+      },
+      params: {},
+    },
+    {
+      url: 'https://www.youtube.com/watch?v=gHIS-Xb2DbY' /* Emojis */,
+      state: {
+        x: 33,
+        y: 514,
+        z: 2,
         w: 522,
         h: 312,
       },
@@ -52,18 +63,9 @@ export function initialWindows() {
       state: {
         x: 368,
         y: 205,
+        z: 3,
         w: 734,
         h: 431,
-      },
-      params: {},
-    },
-    {
-      url: 'https://www.youtube.com/watch?v=gHIS-Xb2DbY' /* Emojis */,
-      state: {
-        x: 33,
-        y: 514,
-        w: 522,
-        h: 312,
       },
       params: {},
     },
@@ -72,6 +74,7 @@ export function initialWindows() {
       state: {
         x: 1038,
         y: 401,
+        z: 4,
         w: 449,
         h: 353,
       },
@@ -80,4 +83,5 @@ export function initialWindows() {
   ]
 }
 
+export const zIndex = persisted('zIndex', 50)
 export const windows = persisted('windows', initialWindows())
