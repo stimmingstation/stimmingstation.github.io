@@ -53,18 +53,39 @@
 
   mapTouchToMouseFor('.draggable')
 
-  // Svelte Event Handling
-  function onDragStart(_) {
+  function savePointerEvents() {
     oldPointerEvents = root.style.pointerEvents
     content.style.pointerEvents = 'none'
   }
 
-  function onDragLeave(_) {
+  function restorePointerEvents() {
     content.style.pointerEvents = oldPointerEvents
     oldPointerEvents = null
+
+    // HACK: force reactivity
+    $windows = $windows;
+  }
+
+  // Drag event handling
+  function onDragStart() {
+    savePointerEvents()
   }
 
   function onDragMove(event) {
+    state.x = event.detail.position.left
+    state.y = event.detail.position.top
+  }
+
+  function onDragStop() {
+    restorePointerEvents()
+  }
+
+  // Resize event handling
+  function onResizeStart() {
+    savePointerEvents()
+  }
+
+  function onResizeMove(event) {
     if (resizable) {
       if (isResizing) {
         state.w = initialWidth + event.detail.position.left - state.x
@@ -79,13 +100,13 @@
     }
   }
 
-  function onDragStop() {
+  function onResizeStop() {
     isResizing = false
 
-    // NOTE: We restore the 'pointer-events: none'
-    onDragLeave()
+    restorePointerEvents()
   }
 
+  // Misc event handling
   function onSpecialClicked() {
     dispatch('special')
   }
@@ -111,7 +132,8 @@
     cursor: 'grabbing',
   }}
   on:drag:start={onDragStart}
-  on:drag:stop={onDragLeave}
+  on:drag:move={onDragMove}
+  on:drag:stop={onDragStop}
   style="width:{state.w}px; height:{state.h}px;"
   bind:this={root}
 >
@@ -135,9 +157,9 @@
     <div
       class="draggable window--resize"
       use:agnosticDraggable={{ helper: 'clone', revert: true }}
-      on:drag:start={onDragStart}
-      on:drag:move={onDragMove}
-      on:drag:stop={onDragStop}
+      on:drag:start={onResizeStart}
+      on:drag:move={onResizeMove}
+      on:drag:stop={onResizeStop}
     ></div>
   {/if}
 </div>

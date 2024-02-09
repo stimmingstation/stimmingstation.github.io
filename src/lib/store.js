@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store'
+import { persisted } from 'svelte-persisted-store'
 
 export const zIndex = writable(1)
 
@@ -15,7 +16,7 @@ export const zIndex = writable(1)
 /**
  * Object representing all Windows
  * @typedef {{
- *   title: string,
+ *   title?: string,
  *   url: string,
  *   state: WindowState,
  *   params: any,
@@ -77,4 +78,4 @@ const initialWindows = [
   },
 ]
 
-export const windows = writable(initialWindows)
+export const windows = persisted('windows', initialWindows)

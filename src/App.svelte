@@ -14,19 +14,17 @@
   function openWindow(url, title = 'Custom', width = 500, height = 380) {
     $windows = [
       ...$windows,
-      ...[
-        {
-          title: title,
-          url: url,
-          state: {
-            x: newX,
-            y: newY,
-            w: width,
-            h: height,
-          },
-          params: {},
+      {
+        title: title,
+        url: url,
+        state: {
+          x: newX,
+          y: newY,
+          w: width,
+          h: height,
         },
-      ],
+        params: {},
+      },
     ]
     newX += 10
     newY += 10
