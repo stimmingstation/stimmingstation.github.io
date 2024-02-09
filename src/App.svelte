@@ -2,7 +2,7 @@
   import TaskBar from './lib/TaskBar.svelte'
   import YouTube from './lib/applications/YouTube.svelte'
   import Custom from './lib/applications/Custom.svelte'
-  import { windows } from './lib/store.js'
+  import { windows, initialWindows } from './lib/store.js'
   import AddWindowModal from './lib/startmenu/AddWindowModal.svelte'
   import { extractYouTubeVideoId } from './lib/utils'
   import DosBox from './lib/applications/DosBox.svelte'
@@ -105,6 +105,13 @@
           window.open('https://git.stimming.club', '_blank')
         },
       },
+      {
+        name: 'Reset Desktop',
+        click() {
+          console.log("Haha, IDA reference");
+          $windows = initialWindows();
+        },
+      }
     ]}
   />
 </main>
