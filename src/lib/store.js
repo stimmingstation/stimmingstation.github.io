@@ -48,7 +48,7 @@ export function initialWindows() {
       params: {},
     },
     {
-      url: 'https://www.youtube.com/watch?v=gHIS-Xb2DbY' /* Emojis */,
+      url: 'https://www.youtube.com/watch?v=jM47xzL8n1w' /* Funny 1 hour */,
       state: {
         x: 33,
         y: 514,

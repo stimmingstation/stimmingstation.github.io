@@ -163,7 +163,7 @@
         },
       },
       {
-        name: 'Share Desktop 🔗',
+        name: '❤️ Share Desktop',
         click() {
           const url = new URL(window.location.href)
           compress(JSON.stringify($windows)).then(value => {
