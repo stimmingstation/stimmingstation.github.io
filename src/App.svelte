@@ -39,7 +39,7 @@
     return null
   }
 
-  // Comppreses string to GZIP. Retruns a Promise with Base64 string
+  // Compresses string to GZIP. Retruns a Promise with Base64 string
   const compress = string => {
     const blobToBase64 = blob =>
       new Promise((resolve, _) => {
@@ -138,6 +138,12 @@
         },
       },
       {
+        name: 'Windows XP',
+        click() {
+          openWindow('https://lrusso.github.io/VirtualXP/VirtualXP.htm', 'Windows XP', 800, 600)
+        },
+      },
+      {
         name: 'Linux Shell',
         click() {
           openWindow('https://shell.segfault.net', 'SegFault')
@@ -157,7 +163,7 @@
         },
       },
       {
-        name: 'Share Desktop',
+        name: 'Share Desktop 🔗',
         click() {
           const url = new URL(window.location.href)
           compress(JSON.stringify($windows)).then(value => {
