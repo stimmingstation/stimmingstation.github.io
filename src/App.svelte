@@ -138,6 +138,17 @@
         },
       },
       {
+        name: 'DVD Screensaver',
+        click() {
+          openWindow(
+            'https://dvd-screensaver.surge.sh/',
+            'DVD Screensaver',
+            533,
+            354,
+          )
+        },
+      },
+      {
         name: 'Windows XP',
         click() {
           openWindow('https://lrusso.github.io/VirtualXP/VirtualXP.htm', 'Windows XP', 800, 600)
